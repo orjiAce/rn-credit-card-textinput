@@ -53,7 +53,7 @@ interface InputProps extends TextInputProps {
                                                errorColor,
                                                ...props
                                            }) => {
-    const [iconName, setIconName] = useState(require('../assets/cards/credit-card.png'));
+    const [iconName, setIconName] = useState(require('./credit-card.png'));
     const [cardError, setCardError] = useState(null);
 
 
