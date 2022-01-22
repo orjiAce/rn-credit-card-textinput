@@ -21,9 +21,9 @@ interface InputProps extends TextInputProps {
     cardInputContainerStyle?: StyleProp<ViewStyle>,
     errorColor?: string,
     labelColor?: string,
-    focusColor: string,
+    focusColor?: string,
     defaultBorderColor?: string,
-    placeholder: string;
+    placeholder?: string;
     error?: string;
     label?: string;
     touched?: boolean;
@@ -83,7 +83,7 @@ interface InputProps extends TextInputProps {
         }
     }
 
-    let validationColor = !touched ? defaultBorderColor : cardError ? '#FF5A5F' : focus ? "blue" : defaultBorderColor
+    let validationColor = !touched ? defaultBorderColor : cardError ? '#FF5A5F' : focus ? focusColor : defaultBorderColor
 
     return (
         <View style={[cardInputContainerStyle, styles.container]}>

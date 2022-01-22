@@ -42,7 +42,7 @@ To deploy this project run
 ![App Screenshot](https://github.com/orjiAce/rn-credit-card-textinput/blob/master/Webp.net-resizeimage.png)
 
 ## Props
-inherits all TextInputProps
+inherits all React-native TextInput Props
 <!-- TABLE_GENERATE_START -->
 
 | Prop       | Type      | Required |
@@ -56,21 +56,23 @@ inherits all TextInputProps
 | labelColor | string    | no       |
 | focusColor | string    | no       |
 | defaultBorderColor | string    | no       |
-| placeholder | string    | yes      |
+| placeholder | string    | no       |
 | error | string    | no       |
 | touched | boolean   | no       |
 | label | string    | no       |
 | value | string    | no       |
 | updateTextVal | func      | yes      |
+| updateCardDateText | func      | yes      |
 
 <!-- TABLE_GENERATE_END -->
 ## Usage/Examples
 
 ```javascript
 
-import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
-import {CardNumberTextInput, CardDateTextInput} from "rn-credit-card-textinput";
 import {useState} from "react";
+import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
+import {CardNumberTextInput, CardDateTextInput} from "../src/index";
+
 
 export default function App() {
     const [cardValue, setCardValue] = useState('');
@@ -80,79 +82,72 @@ export default function App() {
     const [focusCardDateNum, setFocusCardDateNum] = useState<boolean>(false);
 
 
-    const updateText = (cardNum:string) => {
+    const updateText = (cardNum: string) => {
         setCardValue(cardNum)
     }
-   const updateCardDate = (cardNum:string) => {
+    const updateCardDate = (cardNum: string) => {
         setCardDateValue(cardNum)
     }
-    
+
 
     return (
         <View style={styles.container}>
-            <KeyboardAvoidingView    behavior={Platform.OS === "ios" ? "padding" : "height"} style={{
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{
                 width: '90%',
             }}>
-                <CardNumberTextInput errorColor={"red"}
-                                 labelColor={"#ddd"}
-                                 focusColor={"#1c32a0"}
-                                 defaultBorderColor={"#ddd"}
-                                 placeholder={"Card number"}
-                                 label={"Card Number"}
-                                 focus={focusCardNum}
-                                 touched={true}
-                                 updateTextVal={(t) => {
-                                     updateText(t)
-                                 }}
+                <CardNumberTextInput
+                    autoFocus={true}
+                    focus={focusCardNum}
+                    onFocus={() => setFocusCardNum(true)}
+                    onBlur={(e) => {
+                        setFocusCardNum(false);
+                    }}
+                    label="Card number"
+                    errorColor={"red"}
+                    defaultBorderColor={"#ddd"}
+                    inputWrapStyle={{
+                        width:'100%',
+                        height:60
+                    }}
+                    inputStyle={{
+                        fontFamily: 'GT-medium',
+                        color: '#333'
+                    }}
+                    defaultValue={cardValue}
+                    focusColor={"blue"}
+                    placeholder={"Credit card"}
+                    updateTextVal={(text) => {
+                        updateText(text)
+                    }}/>
 
-                                 onFocus={() => setFocusCardNum(true)}
-                                 labelStyle={{
-                                     color: '#333',
-                                     fontWeight: '400'
-                                 }}
-                                 inputWrapStyle={{
-                                     borderRadius: 10,
-                                     borderWidth: 1,
+                <CardDateTextInput
+                    errorColor={"red"}
+                    labelColor={"#ddd"}
+                    focusColor={"#1c32a0"}
+                    defaultBorderColor={"#ddd"}
+                    placeholder={"MM/YY"}
+                    label={"Expiry date"}
+                    focus={focusCardDateNum}
+                    updateCardDateText={(t) => {
+                        updateCardDate(t)
+                    }}
+                    onFocus={() => setFocusCardDateNum(true)}
+                    labelStyle={{
+                        color: '#333',
+                        fontWeight: '400'
+                    }}
+                    inputWrapStyle={{
+                        borderRadius: 10,
+                        borderWidth: 1,
 
-                                 }}
-                                 placeholderTextColor={"#ccc"}
-                                 value={cardValue}
-                                 defaultValue={cardValue}
-                                 inputStyle={{
-                                     color: '#333',
-                                     fontWeight: 'bold',
-                                 }} />
-
-                <CardDateTextInput errorColor={"red"}
-                                 labelColor={"#ddd"}
-                                 focusColor={"#1c32a0"}
-                                 defaultBorderColor={"#ddd"}
-                                 placeholder={"MM/YY"}
-                                 label={"Expiry date"}
-                                 focus={focusCardDateNum}
-                               updateCardDateText={(t) => {
-                                     updateCardDate(t)
-                                 }}
-                                 onFocus={() => setFocusCardDateNum(true)}
-                                 labelStyle={{
-                                     color: '#333',
-                                     fontWeight: '400'
-                                 }}
-                                 inputWrapStyle={{
-                                     borderRadius: 10,
-                                     borderWidth: 1,
-
-                                 }}
-                                 placeholderTextColor={"#ccc"}
-                                 value={cardDateValue}
-                                 defaultValue={cardDateValue}
-                                 inputStyle={{
-                                     color: '#333',
-                                     fontWeight: 'bold',
-                                 }} />
-
-
-
+                    }}
+                    placeholderTextColor={"#ccc"}
+                    value={cardDateValue}
+                    defaultValue={cardDateValue}
+                    inputStyle={{
+                        color: '#333',
+                        fontWeight: 'bold',
+                    }}/>
 
 
             </KeyboardAvoidingView>
@@ -163,12 +158,13 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width:'100%',
+        width: '100%',
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
     },
 });
+
 
 ```
 

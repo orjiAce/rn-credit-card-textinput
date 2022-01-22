@@ -17,22 +17,22 @@ interface cardDateProps extends TextInputProps {
     labelStyle?: StyleProp<TextStyle>,
     inputWrapStyle?: StyleProp<ViewStyle>,
     cardInputContainerStyle?: StyleProp<ViewStyle>,
-    errorColor: string,
-    labelColor: string,
-    focusColor: string,
-    defaultBorderColor: string,
-    placeholder: string;
+    errorColor?: string,
+    labelColor?: string,
+    focusColor?: string,
+    defaultBorderColor?: string,
+    placeholder?: string;
     error?: string;
-    label: string;
+    label?: string;
     touched?: boolean;
-    focus: boolean;
+    focus?: boolean;
     value?: string;
     updateCardDateText: (text: string) => void
 }
 
 
 
- const CardDateInput: FC<cardDateProps> = ({
+ const CardDateInput: FC<cardDateProps> = ({error,
                                                      labelStyle,
                                                      cardInputContainerStyle,
                                                      inputWrapStyle,
@@ -50,9 +50,8 @@ interface cardDateProps extends TextInputProps {
                                                      ...props
                                                  }) =>{
 
-    const [cardDateError, setCardDateError] = useState(null);
 
-    let validationColor = !touched ? defaultBorderColor : cardDateError ? '#FF5A5F' : focus ? "blue" : defaultBorderColor
+    let validationColor = !touched ? defaultBorderColor : error ? '#FF5A5F' : focus ? "blue" : defaultBorderColor
 
     return(
         <View style={[cardInputContainerStyle, styles.cardDateInputContainer]}>
@@ -85,8 +84,8 @@ interface cardDateProps extends TextInputProps {
                 justifyContent: 'flex-start',
 
             }}>
-                {cardDateError &&
-                    <Text style={[styles.errorMessage, {color: errorColor}]}>{cardDateError}</Text>
+                {error &&
+                    <Text style={[styles.errorMessage, {color: errorColor}]}>{error}</Text>
                 }
             </View>
 
