@@ -60,26 +60,26 @@ interface InputProps extends TextInputProps {
 
 
     const checkCard = (cardNum: string) => {
-        const {message, success, type} = checkCreditCard(cardNum)
+        const {message, type} = checkCreditCard(cardNum)
         setCardError(message)
         if (type === null) {
-            setIconName(require('./cards/credit-card.png'))
+            setIconName(require('./credit-card.png'))
         } else if (type === 'MasterCard') {
-            setIconName(require('./cards/mastercard.png'))
+            setIconName(require('./mastercard.png'))
         } else if (type === 'AmEx') {
-            setIconName(require('./cards/american-express.png'))
+            setIconName(require('./american-express.png'))
         } else if (type === 'Visa') {
-            setIconName(require('./cards/visa.png'))
+            setIconName(require('./visa.png'))
         } else if (type === 'Discover') {
-            setIconName(require('./cards/discover.png'))
+            setIconName(require('./discover.png'))
         } else if (type === 'VisaElectron') {
-            setIconName(require('./cards/visa-e.png'))
+            setIconName(require('./visa-e.png'))
         } else if (type === 'Maestro') {
-            setIconName(require('./cards/maestro.png'))
+            setIconName(require('./maestro.png'))
         } else if (type === 'Solo') {
-            setIconName(require('./cards/solo-card.png'))
+            setIconName(require('./solo-card.png'))
         } else {
-            setIconName(require('./cards/credit-card.png'))
+            setIconName(require('./credit-card.png'))
         }
     }
 
