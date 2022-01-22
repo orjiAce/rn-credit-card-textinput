@@ -19,15 +19,15 @@ interface InputProps extends TextInputProps {
     labelStyle?: StyleProp<TextStyle>,
     inputWrapStyle?: StyleProp<ViewStyle>,
     cardInputContainerStyle?: StyleProp<ViewStyle>,
-    errorColor: string,
-    labelColor: string,
+    errorColor?: string,
+    labelColor?: string,
     focusColor: string,
-    defaultBorderColor: string,
+    defaultBorderColor?: string,
     placeholder: string;
     error?: string;
-    label: string;
+    label?: string;
     touched?: boolean;
-    focus: boolean;
+    focus?: boolean;
     value?: string;
     updateTextVal: (text: string) => void
 }
@@ -63,23 +63,23 @@ interface InputProps extends TextInputProps {
         const {message, success, type} = checkCreditCard(cardNum)
         setCardError(message)
         if (type === null) {
-            setIconName(require('../assets/cards/credit-card.png'))
+            setIconName(require('./cards/credit-card.png'))
         } else if (type === 'MasterCard') {
-            setIconName(require('../assets/cards/mastercard.png'))
+            setIconName(require('./cards/mastercard.png'))
         } else if (type === 'AmEx') {
-            setIconName(require('../assets/cards/american-express.png'))
+            setIconName(require('./cards/american-express.png'))
         } else if (type === 'Visa') {
-            setIconName(require('../assets/cards/visa.png'))
+            setIconName(require('./cards/visa.png'))
         } else if (type === 'Discover') {
-            setIconName(require('../assets/cards/discover.png'))
+            setIconName(require('./cards/discover.png'))
         } else if (type === 'VisaElectron') {
-            setIconName(require('../assets/cards/visa-e.png'))
+            setIconName(require('./cards/visa-e.png'))
         } else if (type === 'Maestro') {
-            setIconName(require('../assets/cards/maestro.png'))
+            setIconName(require('./cards/maestro.png'))
         } else if (type === 'Solo') {
-            setIconName(require('../assets/cards/solo-card.png'))
+            setIconName(require('./cards/solo-card.png'))
         } else {
-            setIconName(require('../assets/cards/credit-card.png'))
+            setIconName(require('./cards/credit-card.png'))
         }
     }
 

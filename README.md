@@ -34,15 +34,36 @@ To deploy this project run
 - Credit card validation
 - Supports cards like VISA, Master card, Amex, Discover,Maestro,VisaElectron etc
 - Works on Expo and bare react-native projects
-- Very light weight (29kb)
-- Cross platform
+- Cross-platform
 
 
 ## Screenshots
 
 ![App Screenshot](https://github.com/orjiAce/rn-credit-card-textinput/blob/master/Simulator%20Screen%20Shot%20-%20iPhone%2012%20-%202022-01-21%20at%2019.24.53.png)
 
+## Props
+inherits all TextInputProps
+<!-- TABLE_GENERATE_START -->
 
+| Prop       | Type      | Required |
+|------------|-----------|----------
+| inputStyle | TextStyle | no       |
+| labelStyle | TextStyle | no       |
+| inputWrapStyle | ViewStyle | no       |
+| cardInputContainerStyle | ViewStyle | no       |
+| cardInputContainerStyle | ViewStyle | no       |
+| errorColor | string    | no       |
+| labelColor | string    | no       |
+| focusColor | string    | no       |
+| defaultBorderColor | string    | no       |
+| placeholder | string    | yes      |
+| error | string    | no       |
+| touched | boolean   | no       |
+| label | string    | no       |
+| value | string    | no       |
+| updateTextVal | func      | yes      |
+
+<!-- TABLE_GENERATE_END -->
 ## Usage/Examples
 
 ```javascript
