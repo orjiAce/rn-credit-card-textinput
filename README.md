@@ -39,7 +39,7 @@ To deploy this project run
 
 ## Screenshots
 
-![App Screenshot](https://github.com/orjiAce/rn-credit-card-textinput/blob/master/Simulator%20Screen%20Shot%20-%20iPhone%2012%20-%202022-01-21%20at%2019.24.53.png)
+![App Screenshot](https://github.com/orjiAce/rn-credit-card-textinput/blob/master/Webp.net-resizeimage.png)
 
 ## Props
 inherits all TextInputProps
@@ -69,7 +69,7 @@ inherits all TextInputProps
 ```javascript
 
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
-import {CardNumberTextInput, CardDateTextInput} from "../src/index";
+import {CardNumberTextInput, CardDateTextInput} from "rn-credit-card-textinput";
 import {useState} from "react";
 
 export default function App() {
