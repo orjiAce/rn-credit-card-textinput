@@ -1,5 +1,7 @@
+import { formatCardNumber } from './internal/CardNumber';
+
 export function numberWithSpace(x: string) {
-    return x.replace(/\W/gi, '').replace(/(.{4})/g, '$1 ');
+    return formatCardNumber(x);
 }
 
 export function formatCardDateString(x: string) {
@@ -20,4 +22,3 @@ export function formatCardDateString(x: string) {
     );
   return x
 }
-

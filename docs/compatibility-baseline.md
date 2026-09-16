@@ -149,3 +149,61 @@ package is published and no history is rewritten. Modern Bob also emits six
 small declaration-map files under `dist/typescript`; those are the only paths
 added to the 44-file published manifest, bringing the generated package to 50
 files without removing or relocating any published path.
+
+## Phase 2 correctness follow-up
+
+The preceding sections describe the Phase 0/1 baseline. Phase 2 corrects the
+cross-brand flag leakage: candidates are detected by prefix, and each must
+satisfy its own prefix and length. Original brand precedence is retained
+explicitly when candidate evaluation is reordered. Normalization, the global
+13–19 digit gate, Luhn checks, card rules, and error strings are unchanged.
+
+A Visa-prefixed 15- or 19-digit number now returns the existing inappropriate
+digit-count error rather than being accepted as AmEx or Solo. An 18-digit
+Switch-prefixed number now resolves to its actual Switch candidate rather than
+borrowing Solo's length. Components consequently display the existing generic
+icon/error for newly rejected numbers; their callback, formatting, styling,
+and controlled-input behavior are unchanged.
+
+The small `src/internal/CardValidation` module is implementation detail and adds
+no root exports. It carries candidate precedence separately from the unchanged
+card-rule records. Previously packaged entry paths and assets remain intact.
+
+The hardcoded PAN-like exception was rechecked in source, history, and published
+`1.1.6` source/build. It is an explicit production blocklist comparison after
+format/Luhn checks, returning the scam-warning error. Its origin and rationale
+remain unestablished: only the initial commit supplies context. Removing it
+would make that currently blocked Mastercard number pass, so it remains in
+place under Phase 2's provenance guardrail. No fraud mechanism or history change
+is introduced.
+
+## Phase 3 domain architecture follow-up
+
+Phase 3 moves the unchanged brand table into typed internal metadata. Each
+brand has an exact string identifier, prefix array, length array, and explicit
+legacy precedence. Luhn remains a global validation step because published
+behavior checks the checksum before deciding whether a brand is supported.
+
+The pure internal card-number domain now owns whitespace normalization, legacy
+four-character formatting, Luhn calculation, candidate detection,
+brand-specific prefix/length validation, and a structured validation result.
+Statuses distinguish empty, invalid format, invalid checksum, blocked number,
+unsupported brand, invalid length, and valid results. The legacy adapter maps
+those statuses back to the same `message`, `success`, and `type` object used by
+published deep imports, including its historical declaration shape.
+
+`CardNumberTextInput` consumes the structured domain result directly. It still
+invokes the callback at the same time with the same formatter output, renders
+the same messages and icons, and intentionally continues to swallow `value`.
+`NumberWithSpaces` remains at its shipped path as an adapter to the shared
+formatter. No domain symbol is added to the root exports.
+
+The PAN-like exception moved to the domain pipeline immediately after the same
+format and checksum checks. Its value, message, and observable behavior remain
+unchanged.
+
+A 392-input comparison with the extracted published `1.1.6` validator covered
+all configured prefixes at lengths 13–19 plus empty, whitespace, punctuation,
+checksum, unknown-prefix, spaced, and blocked cases. All 210 differences were
+classified as Phase 2 state-leak corrections: incorrect cross-brand acceptance
+or classification. No other difference was found in that matrix.

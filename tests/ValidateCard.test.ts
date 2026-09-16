@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import { checkCreditCard } from '../src/ValidateCard';
+import { CARD_BRANDS } from '../src/internal/CardBrands';
+import {
+  validateCardNumber,
+  validateForBrand,
+} from '../src/internal/CardNumber';
 
 function withLuhnCheckDigit(prefix: string, length: number): string {
   const body = prefix.padEnd(length - 1, '0');
@@ -23,7 +28,7 @@ function checkLuhn(value: string): boolean {
   return checksum % 10 === 0;
 }
 
-describe('checkCreditCard characterization', () => {
+describe('checkCreditCard characterization and correctness', () => {
   it.each([
     ['4111111111111111', 'Visa'],
     ['5555555555554444', 'MasterCard'],
@@ -92,19 +97,110 @@ describe('checkCreditCard characterization', () => {
     });
   });
 
-  it('documents cross-card state leakage for an AmEx-length Visa prefix', () => {
-    // Known bug: a Visa prefix remains true while a later 15-digit length matches.
+  it('rejects a 15-digit Visa prefix instead of borrowing the AmEx length', () => {
     expect(checkCreditCard(withLuhnCheckDigit('4', 15))).toMatchObject({
-      success: true,
-      type: 'AmEx',
+      success: false,
+      type: null,
+      message: 'Credit card number has an inappropriate number of digits',
     });
   });
 
-  it('documents cross-card state leakage for a 19-digit Visa prefix', () => {
-    // Known bug: a Visa prefix remains true while Solo supplies the 19-digit length.
+  it('rejects a 19-digit Visa prefix instead of borrowing the Solo length', () => {
     expect(checkCreditCard(withLuhnCheckDigit('4', 19))).toMatchObject({
+      success: false,
+      type: null,
+      message: 'Credit card number has an inappropriate number of digits',
+    });
+  });
+
+  it('selects a real overlapping Switch candidate without borrowing Solo rules', () => {
+    expect(checkCreditCard(withLuhnCheckDigit('4903', 18))).toMatchObject({
       success: true,
-      type: 'Solo',
+      type: 'Switch',
+    });
+  });
+
+  it.each([
+    ['50', 16, null],
+    ['51', 16, 'MasterCard'],
+    ['55', 16, 'MasterCard'],
+    ['56', 16, null],
+    ['34', 15, 'AmEx'],
+    ['35', 16, 'JCB'],
+    ['36', 16, 'DinersClub'],
+    ['63', 16, null],
+    ['64', 16, 'Discover'],
+    ['65', 16, 'Discover'],
+    ['66', 16, null],
+  ] as const)('preserves prefix boundary %s', (prefix, length, type) => {
+    expect(checkCreditCard(withLuhnCheckDigit(prefix, length))).toMatchObject({
+      success: type !== null,
+      type,
+    });
+  });
+
+  it.each([
+    ['', '4111111111111111'],
+    ['4111111111111111', '4111111111111112'],
+    ['4111111111111112', '4111111111111111'],
+    ['5555555555554444', '378282246310005'],
+    [withLuhnCheckDigit('4', 15), '5555555555554444'],
+    ['378282246310005', withLuhnCheckDigit('4', 19)],
+  ])('isolates repeated validation after %j', (first, second) => {
+    const expected = checkCreditCard(second);
+    for (let repeat = 0; repeat < 3; repeat += 1) {
+      checkCreditCard(first);
+      expect(checkCreditCard(second)).toEqual(expected);
+    }
+  });
+
+  it.each([
+    withLuhnCheckDigit('4', 15),
+    withLuhnCheckDigit('4', 19),
+    withLuhnCheckDigit('4903', 18),
+    withLuhnCheckDigit('4026', 16),
+    withLuhnCheckDigit('55', 16),
+    withLuhnCheckDigit('6304', 16),
+  ])('is independent of candidate evaluation order for %s', (number) => {
+    const expected = validateCardNumber(number);
+    expect(validateCardNumber(number, [...CARD_BRANDS].reverse())).toEqual(
+      expected,
+    );
+    expect(
+      validateCardNumber(number, [...CARD_BRANDS.slice(1), CARD_BRANDS[0]]),
+    ).toEqual(expected);
+  });
+
+  it('requires the same brand to satisfy both prefix and length', () => {
+    const amEx = {
+      brand: 'AmEx' as const,
+      lengths: [15],
+      prefixes: ['34', '37'],
+      precedence: 4,
+    };
+    expect(validateForBrand(withLuhnCheckDigit('4', 15), amEx)).toBe(false);
+    expect(validateForBrand(withLuhnCheckDigit('37', 16), amEx)).toBe(false);
+    expect(validateForBrand('378282246310005', amEx)).toBe(true);
+  });
+
+  it.each(['4111111111111111', '5555555555554444', '378282246310005'])(
+    'preserves Luhn rejection for every incorrect check digit of %s',
+    (validNumber) => {
+      for (let digit = 0; digit <= 9; digit += 1) {
+        if (String(digit) === validNumber.at(-1)) continue;
+        expect(checkCreditCard(`${validNumber.slice(0, -1)}${digit}`)).toEqual({
+          success: false,
+          type: null,
+          message: 'Credit card number is in invalid format',
+        });
+      }
+    },
+  );
+
+  it('retains the global rejection of 12-digit Maestro numbers', () => {
+    expect(checkCreditCard(withLuhnCheckDigit('5018', 12))).toMatchObject({
+      success: false,
+      message: 'Credit card number is in invalid format',
     });
   });
 });

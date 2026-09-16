@@ -10,8 +10,7 @@ import {
 import React, {FC, useState} from "react";
 
 import {fontPixel, widthPixel} from "./Normalize";
-import { numberWithSpace} from "./NumberWithSpaces";
-import {checkCreditCard} from "./ValidateCard";
+import {formatCardNumber, validateCardNumber} from "./internal/CardNumber";
 
 
 interface InputProps extends TextInputProps {
@@ -54,29 +53,29 @@ interface InputProps extends TextInputProps {
                                                ...props
                                            }) => {
     const [iconName, setIconName] = useState(require('./credit-card.png'));
-    const [cardError, setCardError] = useState(null);
+    const [cardError, setCardError] = useState<string | null>(null);
 
 
 
 
     const checkCard = (cardNum: string) => {
-        const {message, type} = checkCreditCard(cardNum)
+        const {message, brand} = validateCardNumber(cardNum)
         setCardError(message)
-        if (type === null) {
+        if (brand === null) {
             setIconName(require('./credit-card.png'))
-        } else if (type === 'MasterCard') {
+        } else if (brand === 'MasterCard') {
             setIconName(require('./mastercard.png'))
-        } else if (type === 'AmEx') {
+        } else if (brand === 'AmEx') {
             setIconName(require('./american-express.png'))
-        } else if (type === 'Visa') {
+        } else if (brand === 'Visa') {
             setIconName(require('./visa.png'))
-        } else if (type === 'Discover') {
+        } else if (brand === 'Discover') {
             setIconName(require('./discover.png'))
-        } else if (type === 'VisaElectron') {
+        } else if (brand === 'VisaElectron') {
             setIconName(require('./visa-e.png'))
-        } else if (type === 'Maestro') {
+        } else if (brand === 'Maestro') {
             setIconName(require('./maestro.png'))
-        } else if (type === 'Solo') {
+        } else if (brand === 'Solo') {
             setIconName(require('./solo-card.png'))
         } else {
             setIconName(require('./credit-card.png'))
@@ -108,7 +107,7 @@ interface InputProps extends TextInputProps {
 
                     {...props}
                     onChangeText={(text) => {
-                        updateTextVal(numberWithSpace(text))
+                        updateTextVal(formatCardNumber(text))
                         checkCard(text)
                     }}
                     clearButtonMode="while-editing"
@@ -202,5 +201,3 @@ const styles = StyleSheet.create({
 
 
 export default CardNumberInput
-
-
