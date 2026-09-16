@@ -1,7 +1,7 @@
 {
   "name": "rn-credit-card-textinput",
   "description": "A fully customizable react native Credit card TextInput",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "main": "dist/module/index.js",
   "react-native": "dist/module/index.js",
   "types": "dist/typescript/index.d.ts",
@@ -10,6 +10,9 @@
     "dist"
   ],
   "keywords": [
+    "rn-credit-card-textinput",
+    "rn credit card textinput",
+    "React native Credit card Input",
     "expo",
     "react-native",
     "ios",
@@ -17,7 +20,18 @@
     "Credit card TextInput"
   ],
   "scripts": {
-    "prepare": "bob build"
+    "build": "bob build",
+    "clean": "bob clean",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "pack:check": "node scripts/verify-package.mjs",
+    "consumer:test": "node scripts/verify-consumer.mjs",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run build && npm run pack:check && npm run consumer:test",
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "react": "~17.0.1",
@@ -25,25 +39,45 @@
     "react-native": "0.67.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
-    "@react-native-community/bob": "^0.17.1",
-    "@types/react": "~17.0.21",
-    "typescript": "~4.3.5",
-    "@types/react-native": "~0.66.15"
+    "@eslint/js": "^10.0.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "~17.0.90",
+    "@types/react-native": "~0.66.15",
+    "@types/react-test-renderer": "~17.0.9",
+    "esbuild": "^0.27.0",
+    "eslint": "^10.0.0",
+    "globals": "^17.0.0",
+    "metro-resolver": "^0.87.0",
+    "prettier": "^3.0.0",
+    "react": "~17.0.2",
+    "react-dom": "~17.0.2",
+    "react-native": "0.67.1",
+    "react-native-builder-bob": "^0.43.0",
+    "react-test-renderer": "~17.0.2",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.0.0",
+    "vite": "7.3.5",
+    "vitest": "3.2.7"
   },
   "repository": "https://github.com/orjiAce/rn-credit-card-textinput",
   "author": {
-    "url": "orji.dev",
+    "url": "https://orji.dev",
     "email": "orjiace@gmail.com",
     "name": "Orji joseph"
   },
-  "@react-native-community/bob": {
+  "react-native-builder-bob": {
     "source": "src",
     "output": "dist",
     "targets": [
       "module",
-      "typescript"
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
     ]
   },
-  "license": "MIT"
+  "license": "MIT",
+  "packageManager": "npm@11.5.1"
 }

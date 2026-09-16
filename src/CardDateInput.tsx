@@ -51,7 +51,7 @@ interface cardDateProps extends TextInputProps {
                                                  }) =>{
 
 
-    let validationColor = !touched ? defaultBorderColor : error ? '#FF5A5F' : focus ? "blue" : defaultBorderColor
+    let validationColor = !touched ? defaultBorderColor : error ? '#FF5A5F' : focus ? focusColor : defaultBorderColor
 
     return(
         <View style={[cardInputContainerStyle, styles.cardDateInputContainer]}>

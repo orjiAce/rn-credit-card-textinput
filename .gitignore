@@ -15,3 +15,7 @@ web-build/
 
 # generated files by bob
 lib/
+.idea/
+coverage/
+*.tgz
+yarn-error.log
